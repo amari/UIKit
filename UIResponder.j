@@ -38,8 +38,51 @@
 		_inputView = nil;
 		//This property is typically used to attach an accessory view to the system-supplied keyboard that is presented for UITextField and UITextView objects.
 		_inputAccessoryView = nil;
+		
+		// Setup Touch Events
+		var evt = [self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
+		// WebKit Touch Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
+		document.addEventListener('touchstart', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		document.addEventListener('touchmove', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		document.addEventListener('touchend', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		document.addEventListener('touchcancel', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		// WebKit Gesture Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW23)
+		document.addEventListener('gesturestart', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		document.addEventListener('gesturechange', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		document.addEventListener('gestureend', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
+		// Mozilla Touch Events (https://developer.mozilla.org/en/DOM/Touch_events)
+		document.addEventListener('MozTouchDown', function(evt) { [self _UIEventWithMozillaJSEvent:evt]; });
+		document.addEventListener('MozTouchMove', function(evt) { [self _UIEventWithMozillaJSEvent:evt]; });
+		document.addEventListener('MozTouchUp', function(evt) { [self _UIEventWithMozillaJSEvent:evt]; });
 	}
 	return self;
+}
+
+- (UIEvent)_UIEventWithWebKitJSEvent:(JSEvent)evt { // This should be a UIEvent method, but....
+	evt.preventDefault(); // Just so that events don't propogate to the browser. (Unwanted Scrolling)
+	
+	var uievent = [[UIEvent alloc] init];
+	// Each "touch" is a finger touching the screen.
+	// Optionally, get all touches for the target element using the targetTouches property.
+	var touches = evt.targetTouches;
+	// Optionally, get all changed touches for this event using the changedTouches property:
+	var changed = evt.changedTouches;
+	
+	if (evt.type == "touchstart") {
+		
+	}
+	
+	if (evt.type == "gesturestart") {
+		
+	}
+}
+
+- (UIEvent)_UIEventWithMozillaJSEvent:(JSEvent)evt { // This should be a UIEvent method, but....
+	evt.preventDefault(); // Just so that events don't propogate to the browser. (Unwanted Scrolling)
+	
+	if (evt.type == "MozTouchDown") {
+		
+	}
 }
 
 - (BOOL)isFirstResponder {
@@ -69,6 +112,18 @@
 }
 
 /* Responding to Touch Events */
+
+- (void)touchstartDOMEvent:(JSObject)evt {
+	[self touchesBegan:nil withEvent:[UIEvent eventWithJSEvent:evt]];
+}
+
+- (void)touchendDOMEvent:(JSObject)evt {
+	[self touchesEnded:nil withEvent:[UIEvent eventWithJSEvent:evt]];
+}
+
+- (void)touchmoveDOMEvent:(JSObject)evt {
+	[self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	
