@@ -2,7 +2,7 @@
 A Objective-J implementation of Apple's UIKit Framework. Designed for Mobile App development with Objective-J and Cappuccino.
 
 # Design Goals
-Like UIKit is the replacement for AppKit on iOS devices, UIKit is aimed to be the equivalent for all touchscreen devices. However, the framework is going to allow for 
+Like UIKit is the replacement for AppKit on iOS devices, UIKit is aimed to be the equivalent for all touchscreen devices.
 
 # Status
 Alpha Stage
@@ -25,9 +25,9 @@ Implementation.
 CALayer backing.
 
 # Reference
-UIKit Documentation at Apple (http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKit_Framework/_index.html)
-Mozilla DOM Touch Events (https://developer.mozilla.org/en/DOM/Touch_events)
-WebKit DOM Touch Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
+[UIKit Documentation at Apple](http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKit_Framework/_index.html)
+[Mozilla DOM Touch Events] (https://developer.mozilla.org/en/DOM/Touch_events)
+[WebKit DOM Touch Events] (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
 
 # Contributors
 Amari Robinson

@@ -40,7 +40,7 @@
 		_inputAccessoryView = nil;
 		
 		// Setup Touch Events
-		var evt = [self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
+		//var evt = [self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
 		// WebKit Touch Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
 		document.addEventListener('touchstart', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
 		document.addEventListener('touchmove', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
@@ -67,7 +67,8 @@
 	var touches = evt.targetTouches;
 	// Optionally, get all changed touches for this event using the changedTouches property:
 	var changed = evt.changedTouches;
-	
+	//
+	var numberOfFingers = evt.touches.length;
 	if (evt.type == "touchstart") {
 		
 	}
