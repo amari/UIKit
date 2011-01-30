@@ -40,7 +40,6 @@
 		_inputAccessoryView = nil;
 		
 		// Setup Touch Events
-		//var evt = [self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
 		// WebKit Touch Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
 		document.addEventListener('touchstart', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
 		document.addEventListener('touchmove', function(evt) { [self _UIEventWithWebKitJSEvent:evt]; }, false);
@@ -60,8 +59,7 @@
 
 - (UIEvent)_UIEventWithWebKitJSEvent:(JSEvent)evt { // This should be a UIEvent method, but....
 	evt.preventDefault(); // Just so that events don't propogate to the browser. (Unwanted Scrolling)
-	
-	var uievent = [[UIEvent alloc] init];
+
 	// Each "touch" is a finger touching the screen.
 	// Optionally, get all touches for the target element using the targetTouches property.
 	var touches = evt.targetTouches;
@@ -72,10 +70,26 @@
 	if (evt.type == "touchstart") {
 		
 	}
-	
-	if (evt.type == "gesturestart") {
+	else if (evt.type == "touchend") {
 		
 	}
+	else if (evt.type == "touchmove") {
+		
+	}
+	else if (evt.type == "touchcancel") {
+		
+	}
+	else if (evt.type == "gesturestart") {
+		
+	}
+	else if (evt.type == "gesturechange") {
+		
+	}
+	else if (evt.type == "gestureend") {
+		
+	}
+	
+	return nil;
 }
 
 - (UIEvent)_UIEventWithMozillaJSEvent:(JSEvent)evt { // This should be a UIEvent method, but....
@@ -84,6 +98,14 @@
 	if (evt.type == "MozTouchDown") {
 		
 	}
+	else if (evt.type == "MozTouchMove") {
+		
+	}
+	else if (evt.type == "MozTouchUp") {
+		
+	}
+	
+	return nil;
 }
 
 - (BOOL)isFirstResponder {
@@ -113,18 +135,6 @@
 }
 
 /* Responding to Touch Events */
-
-- (void)touchstartDOMEvent:(JSObject)evt {
-	[self touchesBegan:nil withEvent:[UIEvent eventWithJSEvent:evt]];
-}
-
-- (void)touchendDOMEvent:(JSObject)evt {
-	[self touchesEnded:nil withEvent:[UIEvent eventWithJSEvent:evt]];
-}
-
-- (void)touchmoveDOMEvent:(JSObject)evt {
-	[self touchesMoved:nil withEvent:[UIEvent eventWithJSEvent:evt]];
-}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	
