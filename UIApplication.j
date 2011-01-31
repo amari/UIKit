@@ -20,8 +20,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-@import <AppKit/CPApplication.j>
+@import <Foundation/CPObject.j>
 @import "UIDevice.j"
+@import "UIResponder.j"
 
 UIApp = nil;
 
@@ -38,8 +39,16 @@ UIStatusBarAnimationNone = 0;
 UIStatusBarAnimationFade = 1;
 UIStatusBarAnimationSlide = 2;
 
-@implementation UIApplication : CPApplication {
+//@implementation UIApplication : CPApplication {
+@implementation UIApplication : UIResponder
 	CPNotificationCenter	_localNotificationCenter;
+	
+	CPArray		_eventListeners;
+	UIEvent		_currentEvent;
+	
+	CPObject	_delegate 	@accessors(getter=delegate; setter=setDelegate:);
+	UIWindow	_keyWindow 	@accessors(getter=keyWindow);
+	CPArray		_windows	@accessors(getter=windows);
 }
 
 + (UIApplication)sharedApplication {
@@ -51,7 +60,11 @@ UIStatusBarAnimationSlide = 2;
 
 - (id)init {
 	if (self = [super init]) {
+		_eventListeners = [];
 		
+		_windows = [];
+		[_windows addObject:nil];
+		//[UIRootResponder setNextResponder:[UIApplication sharedApplication]];
 	}
 	
 	return self;
@@ -73,7 +86,7 @@ UIStatusBarAnimationSlide = 2;
 	
 }
 
-- (void)cancelLocalNotification:(UILocalNotification *)notification {
+- (void)cancelLocalNotification:(UILocalNotification)notification {
 	
 }
 
@@ -121,12 +134,12 @@ UIStatusBarAnimationSlide = 2;
 	
 }
 
-- (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)anEvent {
-	return [super sendAction:action to:target from:sender forEvent:anEvent];
+- (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent)anEvent {
+	return NO;
 }
 
-- (void)sendEvent:(UIEvent *)anEvent {
-	[super sendEvent:anEvent];
+- (void)sendEvent:(UIEvent)anEvent {
+	[_keyWindow sendEvent:anEvent];
 }
 
 - (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void(^)(void))keepAliveHandler {
