@@ -26,8 +26,8 @@ CALayer backing.
 
 # Reference
 [UIKit Documentation at Apple](http://developer.apple.com/library/ios/#documentation/uikit/reference/UIKit_Framework/_index.html)
-[Mozilla DOM Touch Events] (https://developer.mozilla.org/en/DOM/Touch_events)
-[WebKit DOM Touch Events] (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
+[Mozilla DOM Touch Events](https://developer.mozilla.org/en/DOM/Touch_events)
+[WebKit DOM Touch Events](http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
 
 # Contributors
 Amari Robinson
