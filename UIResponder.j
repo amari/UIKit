@@ -44,24 +44,6 @@ var UIRootResponder = nil;
 		_inputView = nil;
 		//This property is typically used to attach an accessory view to the system-supplied keyboard that is presented for UITextField and UITextView objects.
 		_inputAccessoryView = nil;
-		
-		_DOMElement = document;
-		// WebKit Touch Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW1)
-		_DOMElement.addEventListener('touchstart', function(evt) { [_view touchstartDOMEvent:evt]; }, false);
-		_DOMElement.addEventListener('touchmove', function(evt) { [_view touchmoveDOMEvent:evt]; }, false);
-		_DOMElement.addEventListener('touchend', function(evt) { [_view touchendDOMEvent:evt]; }, false);
-		_DOMElement.addEventListener('touchend', function(evt) { [_view touchcancelDOMEvent:evt]; }, false);
-
-		//_DOMElement.addEventListener('gesturestart', function(evt) { [_view gesturestartDOMEvent:evt]; }, false);
-		//_DOMElement.addEventListener('gesturechange', function(evt) { [_view gesturechangeDOMEvent:evt]; }, false);
-		//_DOMElement.addEventListener('gestureend', function(evt) { [_view gestureendDOMEvent:evt]; }, false);// WebKit Gesture Events (http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html%23//apple_ref/doc/uid/TP40006511-SW23)
-		//document.addEventListener('gesturestart', function(evt) { [UIRootResponder _UIEventWithWebKitJSEvent:evt]; }, false);
-		//document.addEventListener('gesturechange', function(evt) { [UIRootResponder _UIEventWithWebKitJSEvent:evt]; }, false);
-		//document.addEventListener('gestureend', function(evt) { [UIRootResponder _UIEventWithWebKitJSEvent:evt]; }, false);
-		// Mozilla Touch Events (https://developer.mozilla.org/en/DOM/Touch_events)
-		//document.addEventListener('MozTouchDown', function(evt) { [UIRootResponder _UIEventWithMozillaJSEvent:evt]; });
-		//document.addEventListener('MozTouchMove', function(evt) { [UIRootResponder _UIEventWithMozillaJSEvent:evt]; });
-		//document.addEventListener('MozTouchUp', function(evt) { [UIRootResponder _UIEventWithMozillaJSEvent:evt]; });
 	}
 	return self;
 }

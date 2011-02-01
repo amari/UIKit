@@ -45,43 +45,52 @@ var	UIEventSubtypeNone                              = 0,
    	UIEventSubtypeRemoteControlEndSeekingForward    = 109;
 
 @implementation UIEvent : CPObject {
-	CPTimeInterval	_timestamp @accessors(getter=timestamp);
-	UIEventType		_type	@accessors(getter=type);
-	UIEventSubtype	_subtype	@accessors(getter=subtype);
+	CPTimeInterval	_timestamp @accessors(property=timestamp);
+	UIEventType		_type	@accessors(property=type);
+	UIEventSubtype	_subtype	@accessors(property=subtype);
 	
-	CPSet	_touches;
+	CPSet	_touches	@accessors(property=allTouches);
+	CPSet	_changedTouches @accessors(property=changedTouches);
 }
 
 - (id)init {
 	if (self = [super init]) {
 		_touches = [CPSet set];
+		_changedTouches = [CPSet set];
 	}
 	return self;
 }
 
-/* Getting the Touches for an Event */
-
 + (UIEvent)eventWithJSEvent:(id)anEvent {
-	return [[UIEvent alloc] init];
+	var e = [[UIEvent alloc] init];
+	[e setType:UIEventTypeTouches];
+	[e setSubtype:UIEventSubtypeNone];
+	[e setChangedTouches:anEvent.changedTouches];
+	[e setTouches:anEvent.allTouches];
+	return e;
 }
+
+/* Getting the Touches for an Event */
 
 - (CPSet)allTouches {
 	return _touches;
 }
 
 - (CPSet)touchesForView:(UIView)view {
+	//return [view allTouches];
 	var s = [CPSet set];
 	for (var t in _touches) {
-		if ([t view] == view)
+		if ([_touches[t] view] == view)
 			[s insertObject:[_touches objectAtIndex:t]];
 	}
 	return s;
 }
 
 - (CPSet)touchesForWindow:(UIWindow)_window {
+	//return [_window allTouches];
 	var s = [CPSet set];
 	for (var t in _touches) {
-		if ([t window] == _window)
+		if ([_touches[t] window] == _window)
 			[s insertObject:[_touches objectAtIndex:t]];
 	}
 	return s;
@@ -90,9 +99,10 @@ var	UIEventSubtypeNone                              = 0,
 /* Getting the Touches for a Gesture Recognizer */
 
 - (CPSet)touchesForGestureRecognizer:(UIGestureRecognizer)gesture {
+	//return [gesture touches];
 	var s = [CPSet set];
 	for (var t in _touches) {
-		if ([[t gestureRecognizers] hasObject:gesture])
+		if ([[_touches[t] gestureRecognizers] hasObject:gesture])
 			[s insertObject:[_touches objectAtIndex:t]];
 	}
 	return s;

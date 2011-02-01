@@ -110,6 +110,8 @@ var UIViewAnimationTransitionNone,
 	CPArray _gestureRecognizers	@accessors(property=gestureRecognizers);
 	/* Identifying the View at Runtime */
 	CPInteger _tag @accesors(property=tag);
+	/* Touches and other stuff */
+	CPSet	_touches @accessors(property=allTouches);
 }
 
 - (id)initWithFrame:(CGRect)aRect {
@@ -245,15 +247,17 @@ var UIViewAnimationTransitionNone,
 /* Drawing and Updating the View */
 
 - (void)drawRect:(CGRect)rect {
-	// Draws into CALayer!!
+	var ctx = [CGGraphicsContext currentGraphicsContext];
+	[_layer drawInContext:ctx];
+	// [_layer renderInContext:ctx]; If we want to stay up to date with Apple's API
 }
 
 - (void)setNeedsDisplay {
-	
+	[_layer setNeedsDisplay];
 }
 
 - (void)setNeedsDisplayInRect:(CGRect)invalidRect {
-	
+	[_layer setNeedsDisplayInRect:invalidRect];
 }
 
 /* Managing Gesture Recognizers */
@@ -336,84 +340,38 @@ var UIViewAnimationTransitionNone,
 /* Converting Between View Coordinate Systems */
 
 - (CGPoint)convertPoint:(CGPoint)point toView:(UIView)view {
-	var base1 = CGPointMake(0,0),
-		base2 = CGPointMake(0,0),
-		location = CGPointMake(0,0);
-	
-	// Find base1
-	for (var _v = self; [_v superview] != nil; _v = [_v superview]) {
-		base1.x += [_v frame].origin.x;
-		base1.y += [_v frame].origin.y;
-	}
-	
-	// Find base2
-	for (var _v = view; [_v superview] != nil; _v = [_v superview]) {
-		base2.x += [_v frame].origin.x;
-		base2.y += [_v frame].origin.y;
-	}
-	
-	location.x = point.x + base2.x - base1.x;
-	location.y = point.y + base2.y - base1.y;
-	return location;
+	return [[self layer] convertPoint:point toLayer:[view layer]]; //Pure Convience
 }
 
 - (CGPoint)convertPoint:(CGPoint)point fromView:(UIView)view {
-	var base1 = CGPointMake(0,0),
-		base2 = CGPointMake(0,0),
-		location = CGPointMake(0,0);
-	
-	// Find base1
-	for (var _v = self; [_v superview] != [_v window]; _v = [v superview]) {
-		base1.x += [_v frame].origin.x;
-		base1.y += [_v frame].origin.y;
-	}
-	
-	// Find base2
-	for (var _v = view; [_v superview] != [_v window]; _v = [_v superview]) {
-		base2.x += [_v frame].origin.x;
-		base2.y += [_v frame].origin.y;
-	}
-	
-	location.x = point.x + base1.x - base2.x;
-	location.y = point.y + base1.y - base2.y;
-	return location;
+	return [[self layer] convertPoint:point fromLayer:[view layer]]; //Pure Convience
 }
 
 - (CGRect)convertRect:(CGRect)rect toView:(UIView)view {
-	var r = rect;
-	r.origin = [self convertPoint:rect.origin toView:view];
-	return r;
+	return [[self layer] convertRect:rect toLayer:[view layer]]; //Pure Convience
 }
 
 - (CGRect)convertRect:(CGRect)rect fromView:(UIView)view {
-	var r = rect;
-	r.origin = [self convertPoint:rect.origin fromView:view];
-	return r;
+	return [[self layer] convertRect:rect fromLayer:[view layer]]; //Pure Convience
 }
 
 /* Hit Testing in a View */
 
 - (UIView)hitTest:(CGPoint)point withEvent:(UIEvent)event {
-	if ([self pointInside:point withEvent:event] == NO) {
-		for (var t = 0, tt = [_subviews count]; t < tt; t++) {
-			var v = [_subviews objectAtIndex:t],
-				p = [self convertPoint:point toView:v];
-			if ([v hitTest:p withEvent:event] == YES)
-				return v;
-		}
-		return nil;
-	}
-	return self;
+	var p = [[self layer] convertPoint:point toLayer:[[self layer] superlayer]],
+		l = [[self layer] hitTest:p];
+	
+	if (l != nil)
+		return [l view];
+		
+	return nil;
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent)event {
 	if (_hidden || _alpha < 0.01 || _userInteractionEnabled == NO)
 		return NO;
 	
-	if ((_frame.origin.x + _frame.size.width >= point.x) && (_frame.origin.y + _frame.size.height >= point.y))
-		return YES;
-		
-	return NO;
+	return [[self layer] containsPoint:point];
 }
 
 /* Ending a View Editing Session */
@@ -472,9 +430,5 @@ var UIViewAnimationTransitionNone,
 {
 	_gestureRecognizers.forEach(function (x) { [x touchesMoved:touches withEvent:anEvent] });
 }
-
-@end
-
-@implementation UIView (CPCoding)
 
 @end

@@ -42,7 +42,9 @@ var	UITouchPhaseBegan = 0
 	CPArray		_gestureRecognizers	@accessors(getter=gestureRecognizers);
 	
 	CGPoint	_location @accessors(property=location);
-	CGPoint _previousLocation @property(property=previousLocation);
+	CGPoint _previousLocation @accessors(property=previousLocation);
+	
+	CPString _identifier @accessors(property=identifier);
 }
 
 - (id)init {
@@ -60,8 +62,8 @@ var	UITouchPhaseBegan = 0
 + (UITouch)touchWithJSTouch:(id)anEvent {
 	var touch = [[UITouch alloc] init];
 	var location = CGPointMake(anEvent.screenX,anEvent.screenY);
-	var view = [[UIApp keyWindow] hitTest:location];
-	var element = anEvent.target;
+	var view = [[UIApp platformWindow] hitTest:location];
+	//var element = anEvent.target;
 	
 	[touch setPreviousLocation:[touch location]];
 	[touch setLocation:location];
@@ -69,6 +71,7 @@ var	UITouchPhaseBegan = 0
 	[touch setWindow:[view window]];
 	[touch setPhase:UITouchPhaseBegan];
 	[touch setTimestamp:[CPDate date]];
+	[touch setIdentifier:anEvent.identifier];
 	return touch;
 }
 
@@ -77,11 +80,11 @@ var	UITouchPhaseBegan = 0
 // so we need to convert the coordinates.
 
 - (CGPoint)locationInView:(UIView)view {
-	return [_view convertPoint:_location fromView:[UIApp keyWindow]];
+	return [[UIApp platformWindow] convertPoint:_location toView:view];
 }
 
 - (CGPoint)previousLocationInView:(UIView)view {
-	return [_view convertPoint:_previousLocation fromView:[UIApp keyWindow]];
+	return [[UIApp platformWindow] convertPoint:_previousLocation toView:view];
 }
 
 @end

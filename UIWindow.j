@@ -54,8 +54,8 @@ var	UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotificatio
 	BOOL	_keyWindow	@accessors(getter=isKeyWindow);
 }
 
-- (id)init {
-	if (self = [super init]) {
+- (id)initWithFrame:(CGRect)aRect {
+	if (self = [super initWithFrame:aRect]) {
 		_windowLevel = 0.0;
 	}
 	return self;
@@ -107,6 +107,7 @@ var	UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotificatio
 
 - (void)sendEvent:(UIEvent)event {
 	/* Dispatches events sent to the receiver by the UIApplication object to its views. */
+	[[event window] sendEvent:event];
 }
 
 @end
