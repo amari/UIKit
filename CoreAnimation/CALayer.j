@@ -920,24 +920,35 @@ if (_DOMContentsElement && aLayer._zPosition > _DOMContentsElement.style.zIndex)
 */
 - (CALayer)hitTest:(CGPoint)aPoint
 {
-    if (_isHidden)
-        return nil;
-    
-    var point = CGPointApplyAffineTransform(aPoint, _transformToLayer);
-    //alert(point.x + " " + point.y);
-    
-    if (!_CGRectContainsPoint(_bounds, point))
-        return nil;
-    
-    var layer = nil,
-        index = _sublayers.length;
-    
-    // FIXME: this should take into account zPosition.
-    while (index--)
-        if (layer = [_sublayers[index] hitTest:point])
-            return layer;
-            
-    return self;
+	// aPoint is in superlayer's coordinate system, we should change that.
+	var p = [self convertPoint:aPoint fromLayer:[self superlayer]];
+	
+	if ([self containsPoint:p] == NO) {
+		var a = [CPArray array];
+		for (var t = 0, tt = [_sublayers count]; t < tt; t++) {
+			var v = [_sublayers objectAtIndex:t];
+			if ([v isHidden] == NO && [v opacity] > 0.01 && [v hitTest:p] == YES) {
+				[a addObject:v];
+			}
+		}
+		// Take into account CALayers' ZPosition
+		if ([a count] > 0) {
+			var e = [a objectEnumerator],
+				l,
+				ll = [e nextObject];
+			while (l = [e nextObject]) {
+				if ([l ZPosition] > [ll ZPosition]) {
+					[a removeObject:ll];
+				} else {
+					[a removeObject:l];
+					ll = l;
+				}
+			}
+			return [a firstObject];
+		}
+		return nil;
+	}
+	return self;
 }
 
 // Modifying the Delegate
